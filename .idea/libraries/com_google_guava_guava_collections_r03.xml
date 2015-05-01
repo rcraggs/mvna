@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="com.google.guava:guava-collections:r03" type="repository">
+    <properties maven-id="com.google.guava:guava-collections:r03" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava-collections/r03/guava-collections-r03.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava-annotations/r03/guava-annotations-r03.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava-primitives/r03/guava-primitives-r03.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava-base/r03/guava-base-r03.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
