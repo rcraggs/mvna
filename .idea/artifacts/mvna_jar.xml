@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mvna:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/mvna_jar</output-path>
+    <root id="archive" name="mvna.jar">
+      <element id="module-output" name="mvna" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/mathCollection.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/guava/guava-collections/r03/guava-collections-r03.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/guava/guava-annotations/r03/guava-annotations-r03.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/guava/guava-primitives/r03/guava-primitives-r03.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/guava/guava-base/r03/guava-base-r03.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/opencsv/opencsv/3.3/opencsv-3.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
