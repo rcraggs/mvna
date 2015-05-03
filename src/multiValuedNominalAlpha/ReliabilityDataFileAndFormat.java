@@ -17,21 +17,6 @@
    char valueSeperator;
    char unitSeperator;
    boolean rowForCoders;
-   final String FIELD_NAME = "FILENAME";
- 
-   final String FIELD_PATH = "FILEPATH";
- 
-   final String FIELD_LOG = "LOG_CALCULATIONS";
- 
-   final String FIELD_FIRST_ROW = "FIRST_ROW";
- 
-   final String FIELD_FIRST_COL = "FIRST_COL";
- 
-   final String FIELD_VALUE_SEP = "VALUE_SEP";
- 
-   final String FIELD_UNIT_SEP = "UNIT_SEP";
- 
-   final String FIELD_ROW_FOR_CODERS = "ROW_FOR_CODERS";
  
    public ReliabilityDataFileAndFormat(String path) throws IOException
    {
@@ -147,8 +132,3 @@
      return result;
    }
  }
-
-/* Location:           C:\dev\from jar\
- * Qualified Name:     multiValuedNominalAlpha.ReliabilityDataFileAndFormat
- * JD-Core Version:    0.6.2
- */

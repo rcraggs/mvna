@@ -19,8 +19,8 @@ import java.util.HashSet;
    {
      return this.labels[unit][coder];
    }
- 
-   public Object[][] getLabels()
+
+     public Set<String>[][] getLabels()
    {
      return this.labels;
    }

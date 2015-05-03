@@ -1223,25 +1223,5 @@ import multiValuedNominalAlpha.reliabilityDataFactory.ReliabilityDataFactory;
              this.mvnaCalculator.getCalculations();
      saveSomething("Save all results", allText, this.fileBasename + "_all_results.txt");
    }
- 
-   protected void genLogActionPerformed(ActionEvent evt)
-   {
-     this.mvnaCalculator.setLogCalculations(true);
-     this.mvnaCalculator.reset();
-     this.mvnaCalculator.calculateAlpha();
- 
-     this.calculationsText.setText(this.mvnaCalculator.getCalculations());
-   }
- 
-   protected void viewDataStatsMenuItemActionPerformed(ActionEvent evt)
-   {
-     calculateDoAndUpdate();
- 
-     this.tabbedPane.setSelectedIndex(3);
-   }
- 
-   protected void calcAlphaMenuFunctionActionPerformed(ActionEvent evt)
-   {
-     calculateDeAndUpdate();
-   }
+
  }

@@ -357,19 +357,6 @@ public class MultiValuedAlphaCalculator extends Thread {
         return cProduct * kDiffcProduct * kIntersectionCProduct;
     }
 
-    private int getNumberOfPossibleCombinations() {
-        int combinations = 0;
-        int v_fact = rangefactorial(this.numberOfValuesUsed, 1);
-
-        Iterator sizes = this.allUsedSizes.iterator();
-        while (sizes.hasNext()) {
-            int size = ((Integer) sizes.next()).intValue();
-            combinations += v_fact / (rangefactorial(this.numberOfValuesUsed - size, 1) * rangefactorial(size, 1));
-        }
-
-        return combinations;
-    }
-
     private void constructExpectedDeltaMatrix() {
         Set allPossMVs = this.ckFreqProductMatrix.getLabelsSet();
 
@@ -436,17 +423,6 @@ public class MultiValuedAlphaCalculator extends Thread {
 
     public double getDo() {
         return this.Do;
-    }
-
-    private double getDe() {
-        return this.Do;
-    }
-
-    private int rangefactorial(int start, int end) {
-        int product = 1;
-        for (int i = start; i >= end; i--)
-            product *= i;
-        return product;
     }
 
     private int productOfValueFrequencies(MathSet c) {
@@ -538,13 +514,6 @@ public class MultiValuedAlphaCalculator extends Thread {
         return this.alpha;
     }
 
-    public void reset() {
-        this.isDoCalculated = false;
-    }
-
-    public void setLogCalculations(boolean v) {
-        this.verbose = v;
-    }
 
     public LabelledFloatMatrix getCoincidenceMatrix() {
         return this.coincidenceMatrix;
