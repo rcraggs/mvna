@@ -24,8 +24,8 @@
  import javax.swing.event.ChangeEvent;
  import javax.swing.event.ChangeListener;
  import multiValuedNominalAlpha.ReliabilityDataFileAndFormat;
- import multiValuedNominalAlpha.ReliabilityDataMatrix;
- import multiValuedNominalAlpha.reliabilityDataFactory.ReliabilityDataFactory;
+ import multiValuedNominalAlpha.mvnaCalculator.model.ReliabilityDataMatrix;
+ import multiValuedNominalAlpha.mvnaCalculator.ReliabilityDataFactory;
  
  public class OpenFileDialog extends JDialog
  {

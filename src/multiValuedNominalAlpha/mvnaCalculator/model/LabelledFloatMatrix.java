@@ -1,12 +1,13 @@
-package multiValuedNominalAlpha.model;
+package multiValuedNominalAlpha.mvnaCalculator.model;
 
 import java.util.*;
 
 // TODO: refactor this to be a matrix of multi-labels. Some uses will need to other another array type.
 public class LabelledFloatMatrix {
+
     HashMap xLabelMap = new HashMap();
 
-    public void put(Set<String> x, Set<String> y, double value) {
+    public void put(Labels x, Labels y, double value) {
         HashMap yLabelMap;
         if (!this.xLabelMap.containsKey(x)) {
             yLabelMap = new HashMap();
@@ -14,10 +15,10 @@ public class LabelledFloatMatrix {
         } else {
             yLabelMap = (HashMap) this.xLabelMap.get(x);
         }
-        yLabelMap.put(y, new Double(value));
+        yLabelMap.put(y, value);
     }
 
-    public void add(Set<String> x, Set<String> y, double value) {
+    public void add(Labels x, Labels y, double value) {
         HashMap yLabelMap;
         if (!this.xLabelMap.containsKey(x)) {
             yLabelMap = new HashMap();
@@ -30,59 +31,24 @@ public class LabelledFloatMatrix {
             oldValue = (Double) yLabelMap.get(y);
             yLabelMap.remove(y);
         } else {
-            oldValue = new Double(0.0D);
+            oldValue = 0.0D;
         }
-        yLabelMap.put(y, new Double(oldValue.doubleValue() + value));
+        yLabelMap.put(y, oldValue + value);
     }
 
-    public double get(Set<String> x, Set<String> y) {
-        return ((Double) ((HashMap) this.xLabelMap.get(x)).get(y)).doubleValue();
+    public double get(Labels x, Labels y) {
+        return (Double) ((HashMap) this.xLabelMap.get(x)).get(y);
     }
 
     //TODO can we remove this and just use the sorted one?
-    public Set getLabelsSet() {
-        HashSet hs = new HashSet(this.xLabelMap.keySet());
-        return hs;
+    public Set<Labels> getLabelsSet() {
+        return new HashSet(this.xLabelMap.keySet());
     }
 
     private Iterator getOrderedHeaders() {
-        ArrayList<Collection> a = new ArrayList<Collection>(this.xLabelMap.keySet());
-        Collections.sort(a, new Comparator<Collection>() {
-            public int compare(Collection o1, Collection o2) {
-                if (o1.size() < o2.size())
-                    return -1;
-                if (o1.size() == o2.size() && isLowerAlphabetically(o1, o2))
-                    return -1;
-                else
-                    return 1;
-            }
-        });
-
+        ArrayList a = new ArrayList<>(this.xLabelMap.keySet());
+        Collections.sort(a);
         return a.iterator();
-    }
-
-    private boolean isLowerAlphabetically(Collection a, Collection b) {
-        ArrayList orderedA = orderAlphabetically(a);
-        ArrayList orderedB = orderAlphabetically(b);
-
-        for (int i = 0; i < a.size(); i++) {
-            String sa = (String) orderedA.get(i);
-            String sb = (String) orderedB.get(i);
-
-            if (sa.compareToIgnoreCase(sb) < 0) {
-                return true;
-            }
-            if (sa.compareToIgnoreCase(sb) > 0) {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private ArrayList orderAlphabetically(Collection s) {
-        ArrayList l = new ArrayList(s);
-        Collections.sort(l);
-        return l;
     }
 
     public String[] headerOrderedLabelStrings() {
@@ -91,10 +57,9 @@ public class LabelledFloatMatrix {
 
         Iterator labels = getOrderedHeaders();
         while (labels.hasNext()) {
-
             // TODO is the ordering here unnecessary?
-            ArrayList a = orderAlphabetically((Collection) labels.next());
-            String listString = a.toString();
+            //ArrayList a = orderAlphabetically((Collection) labels.next());
+            String listString = labels.next().toString();
             result[index] = ("{" + listString.substring(1, listString.length() - 1) + "}");
             index++;
         }
@@ -106,25 +71,22 @@ public class LabelledFloatMatrix {
 
         int indexX = 0;
 
+        // todo can we not deal with iterators here - justa  list?
         Iterator labels = getOrderedHeaders();
 
         while (labels.hasNext()) {
-            Set<String> label = (Set<String>) labels.next();
+            Labels label = (Labels) labels.next();
             Iterator labels2 = getOrderedHeaders();
             int indexY = 0;
 
             while (labels2.hasNext()) {
-                Set<String> label2 = (Set<String>) labels2.next();
-
+                Labels label2 = (Labels) labels2.next();
                 String valueStr = "" + ((HashMap) this.xLabelMap.get(label)).get(label2);
-
                 result[indexX][indexY] = getFormattedValue(valueStr);
-
                 indexY++;
             }
             indexX++;
         }
-
         return result;
     }
 
@@ -158,12 +120,12 @@ public class LabelledFloatMatrix {
 
         Iterator rowHeaders = getOrderedHeaders();
         String[][] data = getOrderedTableData();
-        for (int x = 0; x < data.length; x++) {
+        for (String[] aData : data) {
             String rowString = rowHeaders.next().toString().replace(',', '|') + ",";
 
-            for (int y = 0; y < data[x].length; y++) {
-                rowString = rowString + data[x][y];
-                if (y < data[x].length + 1) {
+            for (int y = 0; y < aData.length; y++) {
+                rowString = rowString + aData[y];
+                if (y < aData.length + 1) {
                     rowString = rowString + ",";
                 }
             }

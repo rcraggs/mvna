@@ -96,13 +96,8 @@
    {
      return this.fromRow;
    }
- 
-   public boolean isLogCalculations()
-   {
-     return this.logCalculations;
-   }
- 
-   public boolean isRowForCoders()
+
+     public boolean isRowForCoders()
    {
      return this.rowForCoders;
    }
