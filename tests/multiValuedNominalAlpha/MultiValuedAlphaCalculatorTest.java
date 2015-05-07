@@ -1,6 +1,9 @@
 package multiValuedNominalAlpha;
 
-import multiValuedNominalAlpha.reliabilityDataFactory.ReliabilityDataFactory;
+import multiValuedNominalAlpha.gui.UISettings;
+import multiValuedNominalAlpha.mvnaCalculator.model.ReliabilityDataMatrix;
+import multiValuedNominalAlpha.mvnaCalculator.MultiValuedAlphaCalculator;
+import multiValuedNominalAlpha.mvnaCalculator.ReliabilityDataFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -8,6 +11,8 @@ import static org.testng.Assert.*;
 
 public class MultiValuedAlphaCalculatorTest {
 
+    String[][] ex0;
+    ReliabilityDataMatrix r0;
     String[][] ex1;
     ReliabilityDataMatrix r1;
     String[][] ex2;
@@ -17,6 +22,10 @@ public class MultiValuedAlphaCalculatorTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
+
+        ex0 = new String[][]{{"b|x", "a|b|x", "{}", "a"}, {"x", "b", "a", ""}, {"", "b|x", "a", ""}};
+        r0 = ReliabilityDataFactory.processReliabilityData(UISettings.DEFAULT, ex0);
+
         ex1 = new String[3][3];
         ex1[0][0] = "a";
         ex1[1][0] = "a";
@@ -28,7 +37,7 @@ public class MultiValuedAlphaCalculatorTest {
         ex1[1][2] = "c";
         ex1[2][2] = "c";
 
-        r1 = ReliabilityDataFactory.processReliabilityData('|', 1, 1, false, ex1);
+        r1 = ReliabilityDataFactory.processReliabilityData(UISettings.DEFAULT, ex1);
 
         ex2 = new String[3][3];
         ex2[0][0] = "a";
@@ -41,7 +50,7 @@ public class MultiValuedAlphaCalculatorTest {
         ex2[1][2] = "c";
         ex2[2][2] = "c";
 
-        r2 = ReliabilityDataFactory.processReliabilityData('|', 1, 1, false, ex2);
+        r2 = ReliabilityDataFactory.processReliabilityData(UISettings.DEFAULT, ex2);
 
         ex3 = new String[3][3];
         ex3[0][0] = "a";
@@ -54,7 +63,7 @@ public class MultiValuedAlphaCalculatorTest {
         ex3[1][2] = "c";
         ex3[2][2] = "c";
 
-        r3 = ReliabilityDataFactory.processReliabilityData('|', 1, 1, false, ex3);
+        r3 = ReliabilityDataFactory.processReliabilityData(UISettings.DEFAULT, ex3);
     }
 
     @Test
@@ -82,9 +91,17 @@ public class MultiValuedAlphaCalculatorTest {
     @Test
     public void testCalculateAlpha() throws Exception {
 
+        MultiValuedAlphaCalculator m0 = new MultiValuedAlphaCalculator(r0, true);
+        m0.calculateAlpha();
+        System.out.println(m0.getCalculations());
+
+        double alpha = m0.getAlpha();
+        System.out.println("Do: " + m0.getDo());
+        assertEquals(alpha, 0.2866, 0.001);
+
         MultiValuedAlphaCalculator m = new MultiValuedAlphaCalculator(r1, false);
         m.calculateAlpha();
-        double alpha = m.getAlpha();
+        alpha = m.getAlpha();
         System.out.println("Do: " + m.getDo());
 
         assertEquals(alpha, 0.947, 0.001);

@@ -1,6 +1,9 @@
 package multiValuedNominalAlpha.reliabilityDataFactory;
 
-import multiValuedNominalAlpha.ReliabilityDataMatrix;
+import multiValuedNominalAlpha.gui.UISettings;
+import multiValuedNominalAlpha.mvnaCalculator.ReliabilityDataFactory;
+import multiValuedNominalAlpha.mvnaCalculator.model.Labels;
+import multiValuedNominalAlpha.mvnaCalculator.model.ReliabilityDataMatrix;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
@@ -15,26 +18,22 @@ public class ReliabilityDataFactoryTest {
     @Test
     public void testProcessReliabilityData() throws Exception {
 
-        String[][] testData = new String[1][2];
-        testData[0][0] = "a";
-        testData[0][1] = "b";
-        ReliabilityDataMatrix r = ReliabilityDataFactory.processReliabilityData('|', 1, 1, true, testData);
-        assertEquals(r.getNumberOfUnits(), 1);
-        assertEquals(r.getNumberOfCoders(), 2);
-        assertEquals(r.getLabels()[0][0].size(), 1);
-        assertTrue(r.getLabels()[0][0].contains("a"));
-        assertEquals(r.getLabels()[0][1].size(), 1);
-        assertTrue(r.getLabels()[0][1].contains("b"));
+        String[][] exReal = new String[][]{{"b|x", "a|b|x", "{}", "a"}, {"x", "b", "a", ""}, {"", "b|x", "a", ""}, {"p", "p", "p", "p"}};
+        ReliabilityDataMatrix rReal = ReliabilityDataFactory.processReliabilityData(UISettings.DEFAULT, exReal);
+        assertEquals(rReal.getLabels(1, 1), new Labels(new String[]{"b"}));
+        assertEquals(rReal.getLabels(0, 0), new Labels(new String[]{"b", "x"}));
 
-        testData = new String[1][2];
-        testData[0][0] = "a|b";
-        testData[0][1] = "{}";
-        r = ReliabilityDataFactory.processReliabilityData('|', 1, 1, true, testData);
-        assertEquals(r.getNumberOfUnits(), 1);
-        assertEquals(r.getNumberOfCoders(), 2);
-        assertEquals(r.getLabels()[0][0].size(), 2);
-        assertTrue(r.getLabels()[0][0].contains("a"));
-        assertTrue(r.getLabels()[0][0].contains("b"));
-        assertEquals(r.getLabels()[0][1].size(), 0);
+        String[][] ex1 = new String[][]{{"", "u1", "u2"}, {"c1", "A", "B"}, {"c2", "", "{}"}};
+        UISettings u1 = new UISettings("", "", ',', '|', 2, 2, false, true);
+        ReliabilityDataMatrix r1 = ReliabilityDataFactory.processReliabilityData(u1, ex1);
+        assertEquals(r1.getLabels(1, 1), new Labels(new String[]{}));
+        assertEquals(r1.getLabels(0, 0), new Labels(new String[]{"A"}));
+        assertEquals(r1.getLabels(0, 1), null);
+
+        String[][] ex2 = new String[][]{{"c1", "c2", "c3"}, {"c1a1;c1a2", "c2a", "c3a"}, {"c1b", "c2b", "c3b"}};
+        UISettings u2 = new UISettings("", "", ',', ';', 2, 1, false, false);
+        ReliabilityDataMatrix r2 = ReliabilityDataFactory.processReliabilityData(u2, ex2);
+        assertEquals(r2.getLabels(0, 0), new Labels(new String[]{"c1a1", "c1a2"}));
+        assertEquals(r2.getLabels(1, 2), new Labels(new String[]{"c3b"}));
     }
 }
