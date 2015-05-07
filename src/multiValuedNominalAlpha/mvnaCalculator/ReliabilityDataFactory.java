@@ -1,6 +1,7 @@
 package multiValuedNominalAlpha.mvnaCalculator;
 
 import com.opencsv.CSVReader;
+import multiValuedNominalAlpha.gui.UISettings;
 import multiValuedNominalAlpha.mvnaCalculator.model.ReliabilityDataMatrix;
 
 import java.io.BufferedReader;
@@ -10,66 +11,60 @@ import java.io.StringReader;
 
 public class ReliabilityDataFactory {
 
-
-    public static ReliabilityDataMatrix loadReliabilityDataFromCSV(String filename, char labelSeperator, char valueSeperator, int firstDataRow, int firstDataCol, boolean rowsForUnits)
+    public static ReliabilityDataMatrix loadReliabilityDataFromCSV(String filename, UISettings ui)
             throws Exception {
 
-        String[][] reliabilityData;
-        reliabilityData = readDataFromCSV(filename, labelSeperator);
-        ReliabilityDataMatrix rdm = processReliabilityData(valueSeperator, firstDataRow, firstDataCol, rowsForUnits, reliabilityData);
-
-        return rdm;
+        String[][] reliabilityData = readDataFromCSV(filename, ui.getUnitSeperator());
+        return processReliabilityData(ui, reliabilityData);
     }
+
 
     /**
      * Process a data matrix based on the expected format
      *
-     * @param valueSeperator  char used to seperate values within a cell
-     * @param firstDataRow    which row to start interpreting as reliability data
-     * @param firstDataCol    which col to start interpreting as reliability data
-     * @param rowsForUnits    if true, use a row per unit, otherwise a row per coder with units in columns
+     * @param ui settings required to parse the data
      * @param reliabilityData the data matrix
      * @return A reliability data matrix
      * @throws Exception
      */
-    public static ReliabilityDataMatrix processReliabilityData(char valueSeperator, int firstDataRow, int firstDataCol, boolean rowsForUnits, String[][] reliabilityData) throws Exception {
-        int numOfUnits;
-        int numOfCoders;
-        if (!rowsForUnits) {
-            numOfUnits = reliabilityData[0].length - (firstDataCol - 1);
-            numOfCoders = reliabilityData.length - (firstDataRow - 1);
+    public static ReliabilityDataMatrix processReliabilityData(UISettings ui, String[][] reliabilityData) throws Exception {
+
+        int baseRowIndex;
+        int baseColIndex;
+
+        if (!ui.isRowForCoders()) {
+            reliabilityData = switchOrientation(reliabilityData);
+            baseRowIndex = ui.getFromCol() - 1;
+            baseColIndex = ui.getFromRow() - 1;
         } else {
-            numOfUnits = reliabilityData.length - (firstDataCol - 1);
-            numOfCoders = reliabilityData[0].length - (firstDataRow - 1);
+            baseRowIndex = ui.getFromRow() - 1;
+            baseColIndex = ui.getFromCol() - 1;
         }
 
-        if (numOfUnits < 1) {
+        // reliability[0] has all of the observations for the first unit
+
+        int numberOfCoders = reliabilityData.length - baseRowIndex;
+        int numberOfUnits = reliabilityData[0].length - baseColIndex;
+
+        if (numberOfUnits < 1) {
             throw new Exception("Data does not contain at least one unit.");
         }
 
-        if (numOfCoders < 2) {
+        if (numberOfCoders < 2) {
             throw new Exception("Data does not contain at least two coders.");
         }
 
-        if (rowsForUnits) {
-            reliabilityData = switchOrientation(reliabilityData);
-        }
-
-        int numberOfCoders = reliabilityData.length - (firstDataRow - 1);
-        int numberOfUnits = reliabilityData[0].length - (firstDataCol - 1);
-
-        int baseRowIndex = firstDataRow - 1;
-        int baseColIndex = firstDataCol - 1;
-
         ReliabilityDataMatrix rdm = new ReliabilityDataMatrix(numberOfUnits, numberOfCoders);
 
+        //
         for (int coder = baseRowIndex; coder < reliabilityData.length; coder++) {
             for (int unit = baseColIndex; unit < reliabilityData[coder].length; unit++) {
-                if (reliabilityData[coder].length - (firstDataCol - 1) != numberOfUnits) {
+
+                if (reliabilityData[coder].length - baseColIndex != numberOfUnits) {
                     throw new Exception("Reliability data does not have equal number of units on each line");
                 }
 
-                String[] labels = parseMultiLabel(reliabilityData[coder][unit], valueSeperator);
+                String[] labels = parseMultiLabel(reliabilityData[coder][unit], ui.getValueSeperator());
                 try {
                     rdm.setLabels(unit - baseColIndex, coder - baseRowIndex, labels);
                 } catch (ArrayIndexOutOfBoundsException boundsE) {
@@ -77,7 +72,7 @@ public class ReliabilityDataFactory {
                 }
             }
         }
-        return rdm;
+        return rdm; // This matrix is rdm[0] is the first unit.
     }
 
     private static String[][] readDataFromCSV(String filename, char delimeter) throws Exception {

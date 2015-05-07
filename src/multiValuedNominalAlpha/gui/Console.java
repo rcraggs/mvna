@@ -52,7 +52,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import multiValuedNominalAlpha.mvnaCalculator.MultiValuedAlphaCalculator;
-import multiValuedNominalAlpha.ReliabilityDataFileAndFormat;
 import multiValuedNominalAlpha.mvnaCalculator.model.ReliabilityDataMatrix;
 import multiValuedNominalAlpha.mvnaCalculator.ReliabilityDataFactory;
 
@@ -111,14 +110,14 @@ public class Console extends JFrame {
     private JMenuItem openFileMenuItem;
     private JMenu jMenu3;
     private JMenuBar jMenuBar1;
-    private ReliabilityDataFileAndFormat lastDataFormat;
+    private UISettings lastDataFormat;
     private int messageCount = 0;
     private String fileBasename;
 
     private final String ALPHA_FORMAT_STRING = "#.###";
     private boolean doCalculated;
     private boolean lastChangeWasValid;
-    private ReliabilityDataFileAndFormat lastValidFileFormat;
+    private UISettings lastValidFileFormat;
     String errorMessages;
     private ReliabilityDataMatrix rdm;
     private MultiValuedAlphaCalculator mvnaCalculator;
@@ -515,7 +514,7 @@ public class Console extends JFrame {
         File lastOpenedFile = new File("lastOpened");
         if (lastOpenedFile.exists())
             try {
-                this.lastDataFormat = new ReliabilityDataFileAndFormat("lastOpened");
+                this.lastDataFormat = new UISettings("lastOpened");
 
                 this.openLast.setEnabled(true);
             } catch (IOException e) {
@@ -561,21 +560,9 @@ public class Console extends JFrame {
         System.exit(0);
     }
 
-    private ReliabilityDataMatrix loadReliabilityData(ReliabilityDataFileAndFormat ff)
+    private ReliabilityDataMatrix loadReliabilityData(UISettings ff)
             throws Exception {
-        int fromColumn;
-        int fromRow;
-        if (this.isRowsForCoders()) {
-            fromRow = ff.getFromRow();
-            fromColumn = ff.getFromCol();
-        } else {
-            fromColumn = ff.getFromRow();
-            fromRow = ff.getFromCol();
-        }
-
-        return ReliabilityDataFactory.loadReliabilityDataFromCSV(ff.getFilename(),
-                ff.getUnitSeperator(), ff.getValueSeperator(), fromRow,
-                fromColumn, !ff.isRowForCoders());
+        return ReliabilityDataFactory.loadReliabilityDataFromCSV(ff.getFilename(), ff);
     }
 
     private void setupDoDetails() {
@@ -647,7 +634,7 @@ public class Console extends JFrame {
         openNewRDMFile();
     }
 
-    protected ReliabilityDataFileAndFormat getDataFileAndFormat(File rdmFile) {
+    protected UISettings getDataFileAndFormat(File rdmFile) {
 
         if (rdmFile == null) {
             return null;
@@ -655,10 +642,10 @@ public class Console extends JFrame {
         String filepath = rdmFile.getParent();
         String name = rdmFile.getAbsolutePath();
 
-        return new ReliabilityDataFileAndFormat(name, filepath, getUnitSeperator(), getValueSeperator(), getFromRow(), getFromColumn(), logCalculations(), isRowsForCoders());
+        return new UISettings(name, filepath, getUnitSeperator(), getValueSeperator(), getFromRow(), getFromColumn(), logCalculations(), isRowsForCoders());
     }
 
-    private void setFormatControlsValues(ReliabilityDataFileAndFormat rdff) {
+    private void setFormatControlsValues(UISettings rdff) {
         this.rowSpinner.setValue(new Integer(rdff.getFromRow()));
         this.colSpinner.setValue(new Integer(rdff.getFromCol()));
 
@@ -673,7 +660,7 @@ public class Console extends JFrame {
 
     protected void openLastActionPerformed(ActionEvent evt) {
         try {
-            ReliabilityDataFileAndFormat rdff = new ReliabilityDataFileAndFormat("lastOpened");
+            UISettings rdff = new UISettings("lastOpened");
 
             this.rdmFile = new File(rdff.getFilename());
             if (!this.rdmFile.exists()) {
@@ -706,7 +693,7 @@ public class Console extends JFrame {
      *
      * @param format
      */
-    private void updateRDM(ReliabilityDataFileAndFormat format) {
+    private void updateRDM(UISettings format) {
         if (this.rdmFile != null) {
             if (!isOptionsValid()) {
                 printMessage("Error creating reliability data matrix:\n" + this.errorMessages + "\n");
@@ -719,10 +706,8 @@ public class Console extends JFrame {
 
                     setTitle("Multiple Valued Nominal Alpha - " + new File(format.getFilename()).getName());
 
-                    // todo could this be a repeat of tsomething just done?
+                    // todo could this be a repeat of something just done?
                     this.rdm = loadReliabilityData(format);
-
-                    boolean logStateWhenCalculated = this.logCalculations.isSelected();
 
                     // Set the data according to the orientation
                     String[] colHeaders;
@@ -853,7 +838,7 @@ public class Console extends JFrame {
 
         if (!this.valCombo.getSelectedItem().equals("Other"))
             this.valText.setText("");
-        ReliabilityDataFileAndFormat dataFileAndFormat;
+        UISettings dataFileAndFormat;
         try {
             dataFileAndFormat = getDataFileAndFormat(this.rdmFile);
         } catch (StringIndexOutOfBoundsException e) {
@@ -868,7 +853,7 @@ public class Console extends JFrame {
 
         if (!this.unitCombo.getSelectedItem().equals("Other"))
             this.unitText.setText("");
-        ReliabilityDataFileAndFormat dataFileAndFormat;
+        UISettings dataFileAndFormat;
         try {
             dataFileAndFormat = getDataFileAndFormat(this.rdmFile);
         } catch (StringIndexOutOfBoundsException e) {
@@ -1008,6 +993,7 @@ public class Console extends JFrame {
     }
 
     private void openNewRDMFile() {
+
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Open Reliability Data");
 

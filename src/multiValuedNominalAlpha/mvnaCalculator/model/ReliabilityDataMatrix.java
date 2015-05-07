@@ -7,9 +7,21 @@ public class ReliabilityDataMatrix {
         this.labels = new Labels[units][coders];
     }
 
+    /**
+     * Get the label given by the unit and coder ZERO INDEXED
+     *
+     * @param unit
+     * @param coder
+     * @return
+     */
     public Labels getLabels(int unit, int coder) {
+        // TODO: Can we make this not zero indexed?
         return this.labels[unit][coder];
     }
+
+//    public Labels getLabelsForUnitAndCoder(int unit, int coder){
+//        return this.labels[unit - 1][coder - 1];
+//    }
 
     public Labels[][] getLabels() {
         return this.labels;
