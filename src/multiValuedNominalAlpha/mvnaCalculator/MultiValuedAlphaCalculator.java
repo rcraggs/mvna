@@ -1,7 +1,6 @@
 package multiValuedNominalAlpha.mvnaCalculator;
 
 import java.util.*;
-
 import mathCollection.HashMathSet;
 import mathCollection.MathSet;
 import mathCollection.SetOfSets;
@@ -9,7 +8,8 @@ import multiValuedNominalAlpha.mvnaCalculator.model.LabelledFloatMatrix;
 import multiValuedNominalAlpha.mvnaCalculator.model.Labels;
 import multiValuedNominalAlpha.mvnaCalculator.model.ReliabilityDataMatrix;
 
-public class MultiValuedAlphaCalculator extends Thread {
+public class MultiValuedAlphaCalculator {
+
 
     private ReliabilityDataMatrix dataMatrix;
     private boolean verbose;
@@ -20,7 +20,6 @@ public class MultiValuedAlphaCalculator extends Thread {
     private MathSet allMultiValues;
     private MathSet allValues;
     private HashMap valueCount;
-    private int numberOfValuesUsed;
     private HashMap numberOfSizedMultiLabels;
     private HashMap proportionOfSizedMultiLabels;
     private int totalValuesUsed;
@@ -29,16 +28,13 @@ public class MultiValuedAlphaCalculator extends Thread {
     private LabelledFloatMatrix ckFreqProductMatrix;
     private HashMap<Integer, HashMap<Integer, Double>> sizeProductMatrix;
     private LabelledFloatMatrix expectedDeltaMatrix;
-    private int numberOfCodersThatCodedAtLeastOneUnit;
-    private int numberOfUnitsCodedByAtLeastOneCoder;
     private int numberOfMissingCells = 0;
     private int numberOfEmptyCells = 0;
     private double alpha;
     private double Do;
     private double De;
     private boolean isDoCalculated = false;
-
-    public static String newline = System.getProperty("line.separator");
+    private final static String newline = System.getProperty("line.separator");
 
     public MultiValuedAlphaCalculator(ReliabilityDataMatrix rdm, boolean logCalculations) {
         this.dataMatrix = rdm;
@@ -49,13 +45,12 @@ public class MultiValuedAlphaCalculator extends Thread {
         this.calculationsString = new StringBuffer();
         this.valuesLog = new StringBuffer();
 
-        this.valuesLog.append("- Reliability data statistics -" + newline + newline);
+        this.valuesLog.append("- Reliability data statistics -").append(newline).append(newline);
 
         if (this.verbose) {
             this.calculationsString.append("- Calculations log -" + newline);
         } else {
             this.calculationsString.append("Calculations not logged" + newline + newline);
-
             this.calculationsString.append("To view calculations, Select Log Calculationson the Reliability Data Tab" + newline);
         }
 
@@ -226,17 +221,17 @@ public class MultiValuedAlphaCalculator extends Thread {
             }
         }
         this.allValues = new HashMathSet(this.valueCount.keySet());
-        this.numberOfValuesUsed = this.allValues.size();
+        int numberOfValuesUsed = this.allValues.size();
 
-        this.numberOfCodersThatCodedAtLeastOneUnit = 0;
+        int numberOfCodersThatCodedAtLeastOneUnit = 0;
         for (int i = 0; i < codedAtLeastOneUnit.length; i++) {
             if (codedAtLeastOneUnit[i] != false)
-                this.numberOfCodersThatCodedAtLeastOneUnit += 1;
+                numberOfCodersThatCodedAtLeastOneUnit += 1;
         }
-        this.numberOfUnitsCodedByAtLeastOneCoder = 0;
+        int numberOfUnitsCodedByAtLeastOneCoder = 0;
         for (int i = 0; i < codedByAtLeastOneCoder.length; i++) {
             if (codedByAtLeastOneCoder[i] != false) {
-                this.numberOfUnitsCodedByAtLeastOneCoder += 1;
+                numberOfUnitsCodedByAtLeastOneCoder += 1;
             }
         }
 
@@ -249,7 +244,7 @@ public class MultiValuedAlphaCalculator extends Thread {
             this.proportionOfSizedMultiLabels.put(size, new Float((float) number / (float) this.numberOfMultiValues));
         }
 
-        this.valuesLog.append("Number of different individual values :" + this.numberOfValuesUsed + newline + newline);
+        this.valuesLog.append("Number of different individual values :" + numberOfValuesUsed + newline + newline);
 
         this.valuesLog.append("All individual values :" + orderAlphabetically(this.allValues) + newline + newline);
         this.valuesLog.append("Total number of individual values :" + this.totalValuesUsed + newline + newline);
@@ -265,9 +260,9 @@ public class MultiValuedAlphaCalculator extends Thread {
 
         this.valuesLog.append("Proportions multi values for each different size :" + getOrderedHashString(this.proportionOfSizedMultiLabels) + newline + newline);
 
-        this.valuesLog.append("Number of coders that coded at least one unit :" + this.numberOfCodersThatCodedAtLeastOneUnit + newline + newline);
+        this.valuesLog.append("Number of coders that coded at least one unit :" + numberOfCodersThatCodedAtLeastOneUnit + newline + newline);
 
-        this.valuesLog.append("Number of units coded by at least one coder :" + this.numberOfUnitsCodedByAtLeastOneCoder + newline + newline);
+        this.valuesLog.append("Number of units coded by at least one coder :" + numberOfUnitsCodedByAtLeastOneCoder + newline + newline);
 
         this.valuesLog.append("Number of cells with missing data:" + this.numberOfMissingCells + newline + newline);
 

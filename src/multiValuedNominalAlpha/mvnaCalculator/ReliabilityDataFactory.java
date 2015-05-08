@@ -1,7 +1,7 @@
 package multiValuedNominalAlpha.mvnaCalculator;
 
 import com.opencsv.CSVReader;
-import multiValuedNominalAlpha.gui.UISettings;
+import multiValuedNominalAlpha.ui.UISettings;
 import multiValuedNominalAlpha.mvnaCalculator.model.ReliabilityDataMatrix;
 
 import java.io.BufferedReader;
@@ -11,6 +11,14 @@ import java.io.StringReader;
 
 public class ReliabilityDataFactory {
 
+    /**
+     * Load from a path
+     *
+     * @param filename the path to the file
+     * @param ui       the settings used to parse the file
+     * @return parsed data
+     * @throws Exception
+     */
     public static ReliabilityDataMatrix loadReliabilityDataFromCSV(String filename, UISettings ui)
             throws Exception {
 
@@ -75,6 +83,7 @@ public class ReliabilityDataFactory {
         return rdm; // This matrix is rdm[0] is the first unit.
     }
 
+
     private static String[][] readDataFromCSV(String filename, char delimeter) throws Exception {
         String[][] reliabilityData;
         try {
@@ -87,6 +96,11 @@ public class ReliabilityDataFactory {
         return reliabilityData;
     }
 
+    /**
+     * Transpose the array
+     * @param data
+     * @return a new array, transposed
+     */
     private static String[][] switchOrientation(String[][] data) {
         String[][] result = new String[data[0].length][data.length];
         for (int x = 0; x < data.length; x++) {
@@ -122,7 +136,6 @@ public class ReliabilityDataFactory {
         }
 
         return multiLabels;
-
     }
 
 }
