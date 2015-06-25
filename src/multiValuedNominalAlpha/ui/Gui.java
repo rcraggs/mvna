@@ -4,9 +4,6 @@ import multiValuedNominalAlpha.mvnaCalculator.MultiValuedAlphaCalculator;
 import multiValuedNominalAlpha.mvnaCalculator.ReliabilityDataFactory;
 import multiValuedNominalAlpha.mvnaCalculator.model.ReliabilityDataMatrix;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -18,8 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -68,7 +63,6 @@ public class Gui extends JFrame {
     private File rdmFile;
     private long calculationDuration;
 
-    private final Logger logger = LogManager.getLogger("mvna");
     private static final String VERSION = "v1.0";
     public static final String APP_TITLE = "Multiple Valued Nominal Alpha " + Gui.VERSION;
 
