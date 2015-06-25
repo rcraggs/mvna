@@ -1,4 +1,4 @@
-package multiValuedNominalAlpha.gui;
+package multiValuedNominalAlpha.ui;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

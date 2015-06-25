@@ -1,6 +1,6 @@
 package multiValuedNominalAlpha.reliabilityDataFactory;
 
-import multiValuedNominalAlpha.gui.UISettings;
+import multiValuedNominalAlpha.ui.UISettings;
 import multiValuedNominalAlpha.mvnaCalculator.ReliabilityDataFactory;
 import multiValuedNominalAlpha.mvnaCalculator.model.Labels;
 import multiValuedNominalAlpha.mvnaCalculator.model.ReliabilityDataMatrix;
