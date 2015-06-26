@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/mvna.iml" filepath="$PROJECT_DIR$/mvna.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mvna-checkout.iml" filepath="$PROJECT_DIR$/mvna-checkout.iml" />
     </modules>
   </component>
 </project>
